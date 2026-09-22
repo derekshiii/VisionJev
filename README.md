@@ -2,7 +2,7 @@
 
 **Fast multimodal decisions for autonomous driving.**
 
-English | [简体中文](README_CN.md)
+English | [简体中文](README_CN.md) · Branch: `drivejev` · [VisionJev research](https://github.com/derekshiii/DriveJev/tree/visionjev)
 
 DriveJev builds on [Bespoke Nimble](https://github.com/bespokelabsai/nimble), extending its **text-only, single-modality decision interface** to visual observations and vehicle state. DriveJev jointly processes **images, textual criteria, and vehicle state** to produce structured decisions. With Qwen3.5 as the vision-language backbone, we follow a path from **text decisions → visual understanding → driving decisions**.
 
@@ -42,6 +42,8 @@ DriveJev combines the **native Qwen3.5 vision encoder** with language-side LoRA 
 
 The multimodal pipeline is established on both 0.8B and 9B. Driving experiments test its value beyond the synthetic visual task used to validate the image pathway.
 
+A real-image inference smoke test has also passed: the 0.8B adapter selected the offline-best candidate for the tested frame. That interface check used **1,008 image tokens**; the benchmark checkpoints above use **364**.
+
 ## Text decision results
 
 Training on **2,676 examples** improves 0.8B reference-label agreement from **45.4% to 68.5%** on the **324-example holdout**: a gain of **23.1 percentage points**. Our **9B reproduction improves from 66.05% to 87.04%** on the same 324-example holdout.
@@ -58,6 +60,8 @@ Training on **2,676 examples** improves 0.8B reference-label agreement from **45
 | DriveJev 9B · text | 66.05% | **87.04%** |
 
 For context, [Nimble's published results](https://github.com/bespokelabsai/nimble#evaluation-on-324-held-out-examples) on its 324-example holdout are **90.12%** for Bespoke-Nimble-9B and **93.21%** for Jev 1.13.0. These author-reported results provide a larger-model reference; our table presents our own 0.8B and 9B reproductions.
+
+A fresh GPU re-evaluation reproduced **221/324 (68.21%)** for 0.8B and **283/324 (87.35%)** for 9B, each one example away from the original saved run at a tied decision. The table and figure retain the original run results.
 
 ## Multimodal driving results
 

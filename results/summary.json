@@ -1,5 +1,5 @@
 {
-  "provenance": "2026-09-21 development reports; aggregate artifact traceability confirmed by the 2026-09-22 interim release audit; clean-environment inference smoke tests ongoing",
+  "provenance": "Original saved runs; September 22 final release audit independently recomputed stored driving scores and reran GPU evaluations. See docs/VERIFICATION.md.",
   "text": {
     "holdout_size": 324,
     "tasks": [
@@ -23,6 +23,11 @@
     "overall_counts": {
       "base": 147,
       "adapted": 222
+    },
+    "gpu_reevaluation": {
+      "correct": 221,
+      "total": 324,
+      "percent": 68.21
     }
   },
   "driving": {
@@ -53,6 +58,11 @@
     "holdout_size": 324,
     "base_percent": 66.05,
     "adapted_percent": 87.04,
-    "provenance": "run-9b-v1/run_report.json identified in the interim audit; separate from upstream CKPT adapter re-evaluation"
+    "provenance": "run-9b-v1/run_report.json identified in the interim audit; separate from upstream CKPT adapter re-evaluation",
+    "gpu_reevaluation": {
+      "correct": 283,
+      "total": 324,
+      "percent": 87.35
+    }
   }
 }

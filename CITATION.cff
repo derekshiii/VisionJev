@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "Please cite DriveJev and specify the branch, code revision, model revision, and dataset release."
+type: software
+title: "DriveJev: Multimodal Decision Models for Autonomous Driving"
+authors:
+  - name: "DriveJev Contributors"
+repository-code: "https://github.com/derekshiii/DriveJev"
+url: "https://github.com/derekshiii/DriveJev"
+preferred-citation:
+  type: software
+  title: "DriveJev: Multimodal Decision Models for Autonomous Driving"
+  authors:
+    - name: "DriveJev Contributors"
+  year: 2026
+  url: "https://github.com/derekshiii/DriveJev"
