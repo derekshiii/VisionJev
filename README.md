@@ -1,124 +1,93 @@
-# DriveJev
+# VisionJev
 
-**Fast multimodal decisions for autonomous driving.**
+**Small multimodal models for fast, structured visual decisions.**
 
-English | [简体中文](README_CN.md) · Branch: `drivejev` · [VisionJev research](https://github.com/derekshiii/DriveJev/tree/visionjev)
+English | [简体中文](README_CN.md) · [DriveJev application branch](https://github.com/derekshiii/DriveJev/tree/drivejev)
 
-DriveJev builds on [Bespoke Nimble](https://github.com/bespokelabsai/nimble), extending its **text-only, single-modality decision interface** to visual observations and vehicle state. DriveJev jointly processes **images, textual criteria, and vehicle state** to produce structured decisions. With Qwen3.5 as the vision-language backbone, we follow a path from **text decisions → visual understanding → driving decisions**.
+VisionJev is the general multimodal research direction of this repository. We build on [Bespoke Nimble](https://github.com/bespokelabsai/nimble), extending its text-only decision workflow to images and textual criteria through Qwen3.5's native vision-language backbone. Inspired by [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev), the goal is to return decisions that software can use directly.
 
-**Code release scheduled for September 23, 2026.**
+Our research now follows **visual evidence → structured judgment → downstream action**. We first improve general visual decisions, then transfer the resulting methods to autonomous driving in **DriveJev**.
+
+**The code release is planned for September 23, 2026.** The existing driving work is preserved on `drivejev`; new general multimodal research belongs on `visionjev`.
 
 ## Motivation
 
-Driving requires repeated, concrete decisions: whether to maintain speed, slow down, keep a proposed trajectory, or revise it as the scene changes. These decisions sit close to trajectory execution, where both the quality of a judgment and the time it takes to produce it matter.
+An image-based application often needs a specific judgment: which candidate matches an object, whether a condition is visible, or how two objects are related. A compact decision model can provide that answer directly, while application code determines what happens next.
 
-Inspired by [Jev’s System One interface](https://typesafe.ai/blog/introducing-system-one-models-and-jev)—context in, structured decisions out—we bring this decision pattern to visual driving observations.
+The central question is whether a small model makes its decision from the relevant visual evidence. A correct answer alone cannot distinguish visual understanding from a strong language prior. We therefore study image-dependent tasks, paired examples whose answers change with the image, and the effect of visual-token budgets on both quality and latency.
 
-Our goal is a compact decision module between perception and motion planning: one that understands the current scene and returns a bounded answer that planning code can use directly. By reading scores for allowed answers, DriveJev avoids generating a reasoning trace or parsing free-form responses in this decision path.
+Our first target is **Qwen3.5-0.8B**. The 9B model provides a capacity reference. We prioritize experiments that remain useful with limited compute: frozen vision encoders, language-side adaptation, compact inputs, and a small set of controlled comparisons.
 
-We study how far a **0.8B model** can go, use **9B as a capacity reference**, and measure the trade-off between driving quality and end-to-end latency. The current application is trajectory selection; the next step is to assess and selectively correct a planner's proposal. Trajectory generation and vehicle control remain explicit components of the system.
+## Research path
 
-## Text → vision → driving
-
-| Stage | What we learn | Current progress |
+| Stage | Question | Progress |
 | --- | --- | --- |
-| **Text decisions** | Map context and criteria to choices, Boolean judgments, and ordered scores | Nimble recipe reproduced on 0.8B and 9B |
-| **Visual understanding** | Connect image evidence with the same structured decision interface | Image-conditioned training, inference, and checkpoint reload established |
-| **Driving decisions** | Combine road observations, ego motion, and plans to select an action | Multimodal trajectory selection evaluated on NAVSIM |
+| Text decisions | Can small models learn a bounded decision interface? | 0.8B and 9B reproduction complete |
+| Multimodal input | Can real images enter training and decision inference correctly? | Training, reload, and a real-image smoke test verified |
+| Visual decision quality | Does the model use the evidence needed by the question? | Current research priority |
+| Efficient visual decisions | How much visual computation is necessary? | Controlled token-budget and adaptation studies planned |
+| Driving transfer | Do visual improvements improve planning judgments? | Existing NAVSIM results on the DriveJev branch |
 
-Nimble provides the starting point for structured text decisions. DriveJev brings the native visual capability of Qwen3.5 into that workflow, then adapts it to driving observations and trajectory supervision. For the current eight-way choice, all answer scores are read together after a single prompt prefill.
+## Multimodal foundation
 
-## Multimodal capability
+The existing implementation combines a Qwen3.5 vision encoder, image-token expansion, language-side LoRA, and answer-token scoring. Reported driving models freeze the vision encoder and condition decisions jointly on images and textual state.
 
-DriveJev combines the **native Qwen3.5 vision encoder** with language-side LoRA adaptation. The visual encoder is frozen in the reported driving models; the adapted language model receives image tokens together with vehicle state and candidate plans.
+A real 0.8B image-inference check has passed at **1,008 visual tokens**. Completed driving evaluations use **364 visual tokens**. These are different processor budgets; the new research will compare budgets under a common task and training protocol.
 
-| Component | Current implementation |
-| --- | --- |
-| Visual input | A real front-camera image processed with the official PIL image backend |
-| Driving context | Ego state, motion history, navigation command, and candidate trajectories |
-| Visual budget | **364 image tokens** for the reported driving checkpoints |
-| Decision output | Candidate ID and a probability distribution over the supplied choices |
-| Training pipeline | Shared image preparation for training and inference; checkpoint reload verified |
+| Input | Judgment | Application output |
+| --- | --- | --- |
+| Image + candidates | Visual matching | Candidate identity |
+| Image + condition | Visual verification | Yes/no decision |
+| Image + objects or regions | Spatial relation | A relation from a defined set |
 
-The multimodal pipeline is established on both 0.8B and 9B. Driving experiments test its value beyond the synthetic visual task used to validate the image pathway.
+This table defines the next task suite. Broad visual benchmark results are not yet available.
 
-A real-image inference smoke test has also passed: the 0.8B adapter selected the offline-best candidate for the tested frame. That interface check used **1,008 image tokens**; the benchmark checkpoints above use **364**.
+## Text decision foundation
 
-## Text decision results
+Using 2,676 training examples and a 324-example holdout, we reproduced the Nimble training recipe at two model sizes.
 
-Training on **2,676 examples** improves 0.8B reference-label agreement from **45.4% to 68.5%** on the **324-example holdout**: a gain of **23.1 percentage points**. Our **9B reproduction improves from 66.05% to 87.04%** on the same 324-example holdout.
-
-<p align="center">
-  <img src="assets/figures/text_results.png" width="620" alt="Text decision agreement before and after adaptation">
-</p>
-
-*Text adaptation on the Nimble holdout. Each line connects the base and adapted 0.8B model on the same task; values are percentages.*
-
-| Model | Before adaptation | After adaptation |
-| --- | ---: | ---: |
-| DriveJev 0.8B · text | 45.37% | **68.52%** |
-| DriveJev 9B · text | 66.05% | **87.04%** |
-
-For context, [Nimble's published results](https://github.com/bespokelabsai/nimble#evaluation-on-324-held-out-examples) on its 324-example holdout are **90.12%** for Bespoke-Nimble-9B and **93.21%** for Jev 1.13.0. These author-reported results provide a larger-model reference; our table presents our own 0.8B and 9B reproductions.
-
-A fresh GPU re-evaluation reproduced **221/324 (68.21%)** for 0.8B and **283/324 (87.35%)** for 9B, each one example away from the original saved run at a tied decision. The table and figure retain the original run results.
-
-## Multimodal driving results
-
-We combine a **front-view image, ego state, motion history, navigation command, and eight candidate trajectories**. Candidates are generated from the current vehicle state; the model selects a plan through its structured decision interface.
-
-On **12,146 NAVSIM navtest scenes**, the 0.8B model achieves **0.5116 PDM** with **182 ms** median end-to-end inference, while the 9B model reaches **0.5351 PDM** at **335 ms**.
-
-<p align="center">
-  <img src="assets/figures/driving_results.png" width="520" alt="Multimodal driving quality versus median end-to-end latency">
-</p>
-
-*Driving quality versus inference latency. Higher and further left is better. The dashed line is the offline best-of-eight candidate score.*
-
-| Model | PDM ↑ | Latency p50 ↓ | Latency p95 ↓ |
+| Model | Base | Adapted, original run | Independent GPU rerun |
 | --- | ---: | ---: | ---: |
-| DriveJev 0.8B · multimodal | 0.5116 | **182 ms** | 191 ms |
-| DriveJev 9B · multimodal | **0.5351** | 335 ms | 341 ms |
-| Candidate-pool oracle | 0.6827 | — | — |
+| Qwen3.5-0.8B | 45.37% | **68.52%** | 68.21% |
+| Qwen3.5-9B | 66.05% | **87.04%** | 87.35% |
 
-**Evaluation.** Local project evaluation on a NAVSIM v1 snapshot, covering 12,146 scenes across 136 logs with no missing or failed predictions. PDM uses a 0–1 scale and non-reactive replay. The oracle selects the best candidate using offline scores. The paired 9B advantage is approximately +0.0236 PDM, with a log-cluster bootstrap 95% interval of [+0.017, +0.031]. The selected 0.8B and 9B models received two and one epochs of driving adaptation, respectively.
+<p align="center">
+  <img src="assets/figures/text_results.png" width="620" alt="Original 0.8B text adaptation results">
+</p>
 
-**Timing.** H800, BF16, batch size 1, unmerged LoRA adapters; 200 scenes over three interleaved rounds, with 30 warm-up measurements excluded (570 timed requests). End-to-end timing includes JPEG decoding, resizing/normalization, tokenization, prefill, and answer readout, with CUDA synchronization. Image download, cold start, and PDM scoring are outside this boundary.
+*Original 0.8B results by task. Each independent rerun differs from its original model result by one tied decision. These are text holdout results, not visual benchmark scores.*
 
-## Optimization path
+## Next experiments
 
-Our experiments point to three connected priorities.
+1. **Visual evidence:** compare real images with matched image substitutions and an independently trained text-only baseline. Split related images and question variants together.
+2. **Token efficiency:** hold data and training exposure fixed while comparing two measured image-token budgets. Report small-object and spatial-relation performance separately.
+3. **Modality adaptation:** begin with a frozen vision encoder and language-side LoRA. Expand trainable components only after identifying a specific limitation.
+4. **Generalization:** test new scenes, objects, and question templates, with option-order checks and per-task metrics.
+5. **Driving transfer:** transfer the selected visual adaptation to DriveJev and compare against an equal-training control with the same candidate pool.
 
-| Direction | Finding | Next step |
-| --- | --- | --- |
-| **Stronger text decisions** | Small-model adaptation improves structured judgments substantially | Improve supervision, candidate representations, and training efficiency |
-| **More effective visual understanding** | On the development set, 9B improves from 0.6173 with text inputs to 0.6936 with images | Study visual-token budgets, modality alignment, and the environment information required for each decision |
-| **Better driving decisions** | Both model choice and candidate coverage affect final PDM | Generalize to unfamiliar plans, assess risk and utility, and make constrained planning corrections |
+See the [multimodal research plan](docs/MULTIMODAL_PLAN_CN.md) for the initial experiment protocol and branch workflow.
 
-For 0.8B, the initial image-conditioned model and text-only model performed similarly. Additional multimodal training improved the result, making **matched training exposure and better use of visual evidence** central to the next experiments. In the current development runs, increasing the visual budget from 364 to 1,008 tokens did not improve the score. We are therefore studying how to retain useful scene information with fewer tokens.
+## DriveJev: downstream application
 
-The driving roadmap moves from **selecting a plan** to **evaluating a supplied plan**, then **correcting it only when useful**. We will measure successful corrections alongside harmful interventions, progress, comfort, and latency. Closed-loop evaluation with execution delay is the next step toward testing the practical value of fast decisions.
+The [DriveJev branch](https://github.com/derekshiii/DriveJev/tree/drivejev) preserves the driving methodology, figures, and completed NAVSIM evaluation. Its multimodal 0.8B and 9B systems achieved **0.5116** and **0.5351 PDM** on 12,146 navtest scenes, with **182 ms** and **335 ms** median inference latency on H800.
 
-**Research update · September 22.** Trajectory-critic experiments are underway: initial ego-only and lightweight-network runs are complete, and the image-conditioned critic is training. The larger optimization campaign has prepared labels for **30,272 scenes** and **57,668 image frames**. Full evaluations are still running; the tables above retain the completed text and NAVSIM results. Closed-loop evaluation is the next stage.
-
-## Release
-
-**September 23, 2026 — planned code release.**
-
-The release will focus on the text-to-multimodal adaptation pipeline and driving experiments. Further trajectory-assessment and planning-correction work will follow as the research progresses.
+General visual improvements will be evaluated there under matched driving conditions. The aim is to establish which improvements transfer, rather than assuming a higher visual benchmark score implies better driving.
 
 ## Citation
 
+If you use this research branch, cite VisionJev and record the **branch, code revision, model/adapter revision, and dataset release or split manifest**. Cite DriveJev separately when using its driving experiments.
+
 ```bibtex
-@misc{drivejev2026,
-  author       = {{DriveJev Contributors}},
-  title        = {{DriveJev}: Multimodal Decision Models for Autonomous Driving},
-  year         = {2026},
-  howpublished = {\url{https://github.com/derekshiii/DriveJev}},
-  url          = {https://github.com/derekshiii/DriveJev}
+@misc{visionjev2026,
+  author = {{VisionJev Contributors}},
+  title  = {{VisionJev}: Small Multimodal Models for Structured Visual Decisions},
+  year   = {2026},
+  url    = {https://github.com/derekshiii/DriveJev/tree/visionjev}
 }
 ```
 
+[CITATION.cff](CITATION.cff) · [References](references.bib)
+
 ## Acknowledgments
 
-Built on [Bespoke Nimble](https://github.com/bespokelabsai/nimble) and Qwen3.5, with driving evaluation using [NAVSIM](https://github.com/autonomousvision/navsim). Inspired by the structured decision interfaces of [Jev](https://docs.typesafe.ai/concepts/state) and [OpenJev](https://zefan-cai.github.io/open-jev/).
+Built on [Bespoke Nimble](https://github.com/bespokelabsai/nimble) and Qwen3.5. Inspired by [Jev's System One interface](https://typesafe.ai/blog/introducing-system-one-models-and-jev) and [OpenJev](https://zefan-cai.github.io/open-jev/). Driving evaluation uses [NAVSIM](https://github.com/autonomousvision/navsim).

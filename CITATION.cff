@@ -1,15 +1,15 @@
 cff-version: 1.2.0
-message: "Please cite DriveJev and specify the branch, code revision, model revision, and dataset release."
+message: "Please cite VisionJev and specify the branch, code revision, model revision, and dataset release."
 type: software
-title: "DriveJev: Multimodal Decision Models for Autonomous Driving"
+title: "VisionJev: Small Multimodal Models for Structured Visual Decisions"
 authors:
-  - name: "DriveJev Contributors"
+  - name: "VisionJev Contributors"
 repository-code: "https://github.com/derekshiii/DriveJev"
-url: "https://github.com/derekshiii/DriveJev"
+url: "https://github.com/derekshiii/DriveJev/tree/visionjev"
 preferred-citation:
   type: software
-  title: "DriveJev: Multimodal Decision Models for Autonomous Driving"
+  title: "VisionJev: Small Multimodal Models for Structured Visual Decisions"
   authors:
-    - name: "DriveJev Contributors"
+    - name: "VisionJev Contributors"
   year: 2026
-  url: "https://github.com/derekshiii/DriveJev"
+  url: "https://github.com/derekshiii/DriveJev/tree/visionjev"
