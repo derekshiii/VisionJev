@@ -6,9 +6,9 @@
 - `drivejev`：驾驶应用。驾驶数据、轨迹接口、NAVSIM、规划修正和闭环。
 - `main`：保留原始公开快照，本次不删除或重写。
 
-Git 分支没有内置的“主分支”属性。本地通过 checkout `visionjev` 作为工作主线；GitHub 默认分支需在分支推送后通过仓库设置单独更改。当前 GitHub CLI 未登录，本次仅在本地创建和提交，未推送，也未改变远端默认分支。
+Git 分支没有内置的“主分支”属性。本地通过 checkout `visionjev` 作为工作主线；GitHub 默认分支需在分支推送后通过仓库设置单独更改。截至 2026-09-24，本地 `visionjev` 尚未推送，远端默认分支仍为旧版 `main`；网站与 README 完成审阅后，再推送并切换默认分支。
 
-仓库远端仍为 `derekshiii/DriveJev`，无需现在重命名或创建新仓库。VisionJev、DriveJev 的作者暂用各自 Contributors 集体署名；引用应记录实际分支和revision，不将旧驾驶结果改名为新的通用视觉结果。
+仓库已更名为 `derekshiii/VisionJev`；本地 origin 应使用新的 SSH 地址。VisionJev、DriveJev 的作者暂用各自 Contributors 集体署名；引用应记录实际分支和revision，不将旧驾驶结果改名为新的通用视觉结果。
 
 共用代码修改独立提交；驾驶分支通过选择性 cherry-pick 接收通用能力改进，避免整体合并覆盖各自首页和引用。驱动硬件/processor修复如需双向同步，同样按提交选择。当前本地仍为文档与图表仓库，开发源码尚未导入。
 

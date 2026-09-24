@@ -2,13 +2,15 @@
 
 **面向快速结构化视觉决策的小型多模态模型。**
 
-[English](README.md) | 简体中文 · [DriveJev 驾驶应用分支](https://github.com/derekshiii/DriveJev/tree/drivejev)
+[English](README.md) | 简体中文 · [DriveJev 驾驶应用分支](https://github.com/derekshiii/VisionJev/tree/drivejev)
+
+**项目站点：** 尚未上线 —— 静态站点已在本仓库中构建完成，等待配置 GitHub Pages。上线之前，本 README 是主要入口。
 
 VisionJev 是本仓库的通用多模态研究方向。我们 build on [Bespoke Nimble](https://github.com/bespokelabsai/nimble)，利用 Qwen3.5 原生视觉语言骨干，将文本单模态决策流程扩展到图像与文本判断标准。受到 [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) 启发，我们希望模型直接返回软件可以使用的决策。
 
 研究路线调整为 **视觉证据 → 结构化判断 → 下游动作**：首先提升通用视觉决策，再通过 **DriveJev** 迁移到自动驾驶。
 
-**计划于 2026 年 9 月 23 日开源代码。** 已有驾驶工作保留在 `drivejev`，通用多模态探索在 `visionjev` 推进。
+**研究预览。** 当前公开仓库包含项目文档与已评测结果；模型代码正在整理发布。通用多模态研究在 `visionjev` 推进，已有驾驶工作保留在 `drivejev`。
 
 ## 研究动机
 
@@ -69,7 +71,7 @@ VisionJev 是本仓库的通用多模态研究方向。我们 build on [Bespoke 
 
 ## DriveJev：下游驾驶应用
 
-[DriveJev 分支](https://github.com/derekshiii/DriveJev/tree/drivejev)保留驾驶方法、图表与已完成的 NAVSIM 评测。其多模态 0.8B、9B 在 12,146 个 navtest 场景上分别达到 **0.5116、0.5351 PDM**，H800 推理中位延迟分别为 **182 ms、335 ms**。
+[DriveJev 分支](https://github.com/derekshiii/VisionJev/tree/drivejev)保留驾驶方法、图表与已完成的 NAVSIM 评测。其多模态 0.8B、9B 在 12,146 个 navtest 场景上分别达到 **0.5116、0.5351 PDM**，H800 推理中位延迟分别为 **182 ms、335 ms**。
 
 后续通用视觉改进将迁入该分支，在匹配的驾驶条件下检验。研究重点是明确哪些改进能迁移，而不是假设视觉 benchmark 分数提高就必然带来驾驶收益。
 
@@ -82,7 +84,7 @@ VisionJev 是本仓库的通用多模态研究方向。我们 build on [Bespoke 
   author = {{VisionJev Contributors}},
   title  = {{VisionJev}: Small Multimodal Models for Structured Visual Decisions},
   year   = {2026},
-  url    = {https://github.com/derekshiii/DriveJev/tree/visionjev}
+  url    = {https://github.com/derekshiii/VisionJev}
 }
 ```
 

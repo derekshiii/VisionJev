@@ -4,12 +4,12 @@ type: software
 title: "VisionJev: Small Multimodal Models for Structured Visual Decisions"
 authors:
   - name: "VisionJev Contributors"
-repository-code: "https://github.com/derekshiii/DriveJev"
-url: "https://github.com/derekshiii/DriveJev/tree/visionjev"
+repository-code: "https://github.com/derekshiii/VisionJev"
+url: "https://github.com/derekshiii/VisionJev"
 preferred-citation:
   type: software
   title: "VisionJev: Small Multimodal Models for Structured Visual Decisions"
   authors:
     - name: "VisionJev Contributors"
   year: 2026
-  url: "https://github.com/derekshiii/DriveJev/tree/visionjev"
+  url: "https://github.com/derekshiii/VisionJev"

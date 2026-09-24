@@ -2,13 +2,15 @@
 
 **Small multimodal models for fast, structured visual decisions.**
 
-English | [简体中文](README_CN.md) · [DriveJev application branch](https://github.com/derekshiii/DriveJev/tree/drivejev)
+English | [简体中文](README_CN.md) · [DriveJev application branch](https://github.com/derekshiii/VisionJev/tree/drivejev)
+
+**Project site:** not yet published — the static site is built in this repository and awaits GitHub Pages setup. Until it is live, this README is the entry point.
 
 VisionJev is the general multimodal research direction of this repository. We build on [Bespoke Nimble](https://github.com/bespokelabsai/nimble), extending its text-only decision workflow to images and textual criteria through Qwen3.5's native vision-language backbone. Inspired by [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev), the goal is to return decisions that software can use directly.
 
 Our research now follows **visual evidence → structured judgment → downstream action**. We first improve general visual decisions, then transfer the resulting methods to autonomous driving in **DriveJev**.
 
-**The code release is planned for September 23, 2026.** The existing driving work is preserved on `drivejev`; new general multimodal research belongs on `visionjev`.
+**Research preview.** The current public repository contains project documentation and evaluated results. Model code is being prepared for release. General multimodal research continues on `visionjev`; driving work is preserved on `drivejev`.
 
 ## Motivation
 
@@ -69,7 +71,7 @@ See the [multimodal research plan](docs/MULTIMODAL_PLAN_CN.md) for the initial e
 
 ## DriveJev: downstream application
 
-The [DriveJev branch](https://github.com/derekshiii/DriveJev/tree/drivejev) preserves the driving methodology, figures, and completed NAVSIM evaluation. Its multimodal 0.8B and 9B systems achieved **0.5116** and **0.5351 PDM** on 12,146 navtest scenes, with **182 ms** and **335 ms** median inference latency on H800.
+The [DriveJev branch](https://github.com/derekshiii/VisionJev/tree/drivejev) preserves the driving methodology, figures, and completed NAVSIM evaluation. Its multimodal 0.8B and 9B systems achieved **0.5116** and **0.5351 PDM** on 12,146 navtest scenes, with **182 ms** and **335 ms** median inference latency on H800.
 
 General visual improvements will be evaluated there under matched driving conditions. The aim is to establish which improvements transfer, rather than assuming a higher visual benchmark score implies better driving.
 
@@ -82,7 +84,7 @@ If you use this research branch, cite VisionJev and record the **branch, code re
   author = {{VisionJev Contributors}},
   title  = {{VisionJev}: Small Multimodal Models for Structured Visual Decisions},
   year   = {2026},
-  url    = {https://github.com/derekshiii/DriveJev/tree/visionjev}
+  url    = {https://github.com/derekshiii/VisionJev}
 }
 ```
 
