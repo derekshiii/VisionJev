@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VisionJev — 从视觉证据到结构化判断</title>
+<meta name="description" content="VisionJev 研究小型多模态模型能否依据图像中决定答案的证据，完成快速且格式受限的结构化判断。基于 Nimble 的文本决策接口，接入 Qwen3.5 原生视觉能力。">
+<link rel="canonical" href="https://derekshiii.github.io/VisionJev/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VisionJev — 从视觉证据到结构化判断">
+<meta property="og:description" content="小型多模态模型能否依据图像中决定答案的证据完成结构化判断。">
+<meta property="og:url" content="https://derekshiii.github.io/VisionJev/">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3B6FF6"></stop>
+            <stop offset="1" stop-color="#7C5CF6"></stop>
+          </linearGradient>
+        </defs>
+        <circle cx="16" cy="16" r="14" fill="none" stroke="url(#brandGrad)" stroke-width="1.6" opacity=".45"></circle>
+        <ellipse cx="16" cy="16" rx="13" ry="6.2" fill="none" stroke="url(#brandGrad)" stroke-width="1.6" opacity=".7" transform="rotate(-24 16 16)"></ellipse>
+        <circle cx="16" cy="16" r="4.4" fill="url(#brandGrad)"></circle>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">VisionJev</span>
+        <span class="brand-sub">结构化视觉决策</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="主导航">
+      <a href="#capability">能力</a>
+      <a href="#results">实验结果</a>
+      <a href="#roadmap">路线</a>
+      <a href="#drivejev">DriveJev</a>
+      <a href="#citation">引用</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="ghost-link" href="README.md">English</a>
+      <a class="ghost-link gh-link" href="https://github.com/derekshiii/VisionJev">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ Hero ============ -->
+  <section class="hero" id="top">
+    <div class="wrap hero-inner">
+      <p class="eyebrow">VisionJev</p>
+      <h1 class="hero-title">
+        <span class="hero-title-lead">从视觉证据到</span><span class="grad-text">结构化判断</span>
+      </h1>
+      <p class="hero-lede">
+        许多应用需要从图像快速作出格式受限的判断，再由软件决定下一步动作。VisionJev 研究小型多模态模型能否依据图像中<strong>决定答案的证据</strong>完成这类判断。
+        <strong>Qwen3.5-0.8B</strong> 是首要探索对象，9B 作为容量参照。
+      </p>
+      <p class="hero-lede hero-lede-sub">
+        我们从 Nimble 的文本单模态决策接口出发，接入 Qwen3.5 的原生视觉能力；研究先建立通用视觉决策，再把有效方法迁移到下游自动驾驶应用 DriveJev。
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/derekshiii/VisionJev">
+          查看仓库
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"></path></svg>
+        </a>
+        <a class="btn btn-secondary" href="#results">
+          阅读实验结果
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8 3v9M4.5 8.5 8 12l3.5-3.5"></path></svg>
+        </a>
+      </div>
+
+      <p class="hero-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        研究预览：当前公开仓库包含项目文档、图表与已评测结果，模型代码正在整理发布。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 决策接口 ============ -->
+  <section class="section" id="capability">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">决策接口</p>
+      <h2>回答一个限定的判断，而不是生成一段文本</h2>
+      <p class="section-lede">
+        应用代码需要的往往是一个具体判断：哪个候选匹配目标、某个条件是否在画面中成立、两个物体处于什么空间关系。模型直接给出这个判断，由应用决定后续行为。
+      </p>
+
+      <div class="table-card table-compact">
+        <table>
+          <caption class="visually-hidden">VisionJev 计划建立的三类判断任务</caption>
+          <thead>
+            <tr><th scope="col">输入</th><th scope="col">判断</th><th scope="col">输出</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">图像 ＋ 候选选项</th><td>视觉匹配</td><td>候选身份</td></tr>
+            <tr><th scope="row">图像 ＋ 条件描述</th><td>视觉条件判断</td><td>是／否</td></tr>
+            <tr><th scope="row">图像 ＋ 对象或区域</th><td>空间关系判断</td><td>预定义关系</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note note-strong">
+        上表定义的是<strong>任务形式</strong>，不是已经取得的通用视觉成绩。通用视觉 benchmark 尚待建立。
+      </p>
+
+      <figure class="code-figure">
+        <figcaption>接口形态示意 — 结构说明，非真实模型输出</figcaption>
+        <pre><code>{
+  "image":     "&lt;一张图像&gt;",
+  "questions": [
+    { "id": "match",    "type": "choice",  "candidates": ["候选 A", "候选 B", "以上都不是"] },
+    { "id": "visible",  "type": "boolean", "criterion": "条件描述" },
+    { "id": "relation", "type": "choice",  "candidates": ["左", "右", "上", "下"] }
+  ]
+}</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 研究路径 ============ -->
+  <section class="section section-alt" id="roadmap">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">研究路径</p>
+      <h2>文本基础 → 视觉证据 → 高效适配 → 驾驶迁移</h2>
+      <p class="section-lede">
+        每一阶段先回答一个问题，再进入下一阶段。已完成的阶段列出实际验证的内容，未完成的明确标注状态。
+      </p>
+
+      <ol class="roadmap">
+        <li class="roadmap-item is-done">
+          <span class="pill pill-done">已完成</span>
+          <h3>文本决策基础</h3>
+          <p>小模型能否学会有限选项的决策接口？0.8B 与 9B 的文本复现已完成。</p>
+        </li>
+        <li class="roadmap-item is-done">
+          <span class="pill pill-done">已完成</span>
+          <h3>多模态管线</h3>
+          <p>真实图像是否正确进入训练与决策推理？训练、重载与真实单图推理已验证贯通。</p>
+        </li>
+        <li class="roadmap-item is-active">
+          <span class="pill pill-active">进行中</span>
+          <h3>视觉决策质量</h3>
+          <p>模型是否使用了问题所需的视觉证据？这是当前的研究重点。</p>
+        </li>
+        <li class="roadmap-item">
+          <span class="pill">计划中</span>
+          <h3>视觉决策效率</h3>
+          <p>完成一次判断需要多少视觉计算？受控 token 预算与适配实验尚待开展。</p>
+        </li>
+        <li class="roadmap-item">
+          <span class="pill pill-pending">已有结果</span>
+          <h3>驾驶迁移</h3>
+          <p>视觉提升能否改善规划判断？已有 NAVSIM 评测保留在 DriveJev 分支，迁移实验尚未开始。</p>
+        </li>
+      </ol>
+
+      <div class="callout">
+        <h3>正在研究</h3>
+        <ul class="inline-list">
+          <li>真实视觉决策</li>
+          <li>配对换图诊断</li>
+          <li>token 预算与模态对齐</li>
+          <li>陌生轨迹评价</li>
+          <li>规划修正</li>
+        </ul>
+        <p class="note">
+          当前 critic 与大规模矩阵实验尚无最终全量结果；闭环验证与延迟影响验证未完成。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 文本基础结果 ============ -->
+  <section class="section" id="results">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">实验结果</p>
+      <h2>文本决策基础</h2>
+      <p class="section-lede">
+        使用 2,676 条训练样本与 324 条留出样本，我们在两种模型规模上复现了 Nimble 的训练配方。
+      </p>
+
+      <div class="table-card">
+        <table>
+          <caption>文本留出集准确率（324 条）</caption>
+          <thead>
+            <tr>
+              <th scope="col">模型</th>
+              <th scope="col" class="num">基座</th>
+              <th scope="col" class="num">适配后<br><span class="th-sub">原始实验</span></th>
+              <th scope="col" class="num">GPU 独立复评</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Qwen3.5-0.8B</th>
+              <td class="num">45.37%</td>
+              <td class="num num-strong">68.52%</td>
+              <td class="num">68.21%</td>
+            </tr>
+            <tr>
+              <th scope="row">Qwen3.5-9B</th>
+              <td class="num">66.05%</td>
+              <td class="num num-strong">87.04%</td>
+              <td class="num">87.35%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="figure-card">
+        <div class="figure-scroll">
+          <img src="assets/figures/text_results.svg" width="1175" height="541"
+               alt="0.8B 模型在文本留出集上的分任务准确率柱状图，包含 Overall、Choice、Boolean、Ordered score 四类任务，对比基座与适配后的成绩。">
+        </div>
+        <figcaption>
+          图中为 <strong>0.8B 原始实验</strong>的分任务结果，仅覆盖 0.8B，不包含 9B。
+          <span class="scroll-hint">图表较宽，可左右滑动查看完整内容。</span>
+        </figcaption>
+      </figure>
+
+      <p class="note note-strong">
+        这些是<strong>文本留出集</strong>成绩，不是视觉准确率。GPU 独立复评与原始实验各相差一个平局样本，两次结果分别列出。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 多模态能力 ============ -->
+  <section class="section section-alt" id="multimodal">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">多模态能力</p>
+      <h2>管线已经贯通，能力仍在建立</h2>
+      <p class="section-lede">
+        Qwen3.5 原生视觉编码器、图像处理、语言侧 LoRA、候选 token 读出与真实单图推理已经贯通。这是<strong>管线证据</strong>，用于说明接口可以端到端跑通。
+      </p>
+
+      <div class="table-card">
+        <table>
+          <caption>图像 token 预算的三种用途 — 口径不同，不可混用</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="num">图像 token</th>
+              <th scope="col">用途</th>
+              <th scope="col">能说明什么</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" class="num">1,008</th>
+              <td>真实单图示例</td>
+              <td>接口跑通，且该帧判断正确。不是总体视觉能力成绩。</td>
+            </tr>
+            <tr>
+              <th scope="row" class="num">364</th>
+              <td>已完成的驾驶评测</td>
+              <td>DriveJev 的 NAVSIM 评测使用该预算。</td>
+            </tr>
+            <tr>
+              <th scope="row" class="num">480</th>
+              <td>新研究战役</td>
+              <td>与历史 364 配置属于不同处理预算，不得混写。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note note-strong">
+        单图示例只证明<strong>接口贯通</strong>，不能作为总体视觉能力成绩。通用视觉 benchmark 尚待建立，当前没有可发布的视觉准确率数字。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ DriveJev ============ -->
+  <section class="section" id="drivejev">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">下游应用</p>
+      <h2>DriveJev：自动驾驶规划判断</h2>
+      <p class="section-lede">
+        DriveJev 是 VisionJev 的下游应用，保留在同一个仓库的 <code>drivejev</code> 分支。以下为已完成的 NAVSIM 评测结果。
+      </p>
+
+      <div class="table-card">
+        <table>
+          <caption>NAVSIM v1 非反应式回放，12,146 个场景 / 136 logs</caption>
+          <thead>
+            <tr>
+              <th scope="col">模型</th>
+              <th scope="col" class="num">PDM</th>
+              <th scope="col" class="num">端到端中位延迟</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">DriveJev 0.8B</th>
+              <td class="num num-strong">0.5116</td>
+              <td class="num">182 ms</td>
+            </tr>
+            <tr>
+              <th scope="row">DriveJev 9B</th>
+              <td class="num num-strong">0.5351</td>
+              <td class="num">335 ms</td>
+            </tr>
+            <tr class="row-muted">
+              <th scope="row">同候选池离线 oracle</th>
+              <td class="num">0.6827</td>
+              <td class="num">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="figure-card">
+        <div class="figure-scroll">
+          <img src="assets/figures/driving_results.svg" width="917" height="618"
+               alt="DriveJev 0.8B 与 9B 在 NAVSIM 上的 PDM 分数与推理延迟对比图，并标出同候选池离线 oracle 参考线。">
+        </div>
+        <figcaption>
+          DriveJev 0.8B 与 9B 的 PDM 与延迟对比，含同候选池离线 oracle 参考。
+          <span class="scroll-hint">图表较宽，可左右滑动查看完整内容。</span>
+        </figcaption>
+      </figure>
+
+      <div class="callout callout-caution">
+        <h3>口径说明</h3>
+        <ul>
+          <li>延迟为 <strong>H800、BF16、batch=1</strong> 的端到端中位延迟，图像预算 <strong>364 token</strong>。</li>
+          <li>两个模型的<strong>驾驶训练轮数不同</strong>，不应据此比较模型规模的影响。</li>
+          <li>这些数字<strong>不代表</strong>"通用视觉预训练已经提升驾驶表现"。迁移实验尚未开始。</li>
+          <li>没有官方 leaderboard 提交记录。</li>
+        </ul>
+      </div>
+
+      <p class="section-foot">
+        <a class="text-link" href="https://github.com/derekshiii/VisionJev/tree/drivejev">
+          查看 drivejev 分支的方法与完整评测
+          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"></path></svg>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 引用 ============ -->
+  <section class="section section-alt" id="citation">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-accent">引用</p>
+      <h2>如何引用</h2>
+      <p class="section-lede">
+        使用本研究时，请引用 VisionJev，并记录<strong>分支、代码 revision、模型或 adapter revision，以及数据集 release 或 split manifest</strong>。使用驾驶实验时，请另外引用 DriveJev。
+      </p>
+
+      <div class="cite-block">
+        <div class="cite-head">
+          <h3>VisionJev</h3>
+          <button type="button" class="btn-copy" id="copy-bibtex" data-copy-target="bibtex-visionjev" hidden>复制 BibTeX</button>
+        </div>
+        <pre id="bibtex-visionjev"><code>@misc{visionjev2026,
+  author = {{VisionJev Contributors}},
+  title  = {{VisionJev}: Small Multimodal Models for Structured Visual Decisions},
+  year   = {2026},
+  url    = {https://github.com/derekshiii/VisionJev}
+}</code></pre>
+        <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="source-grid">
+        <div class="source-card">
+          <h3>代码与训练方式</h3>
+          <p>文本单模态决策接口与训练配方来自 Bespoke Nimble。</p>
+          <a class="text-link" href="https://github.com/bespokelabsai/nimble">bespokelabsai/nimble</a>
+        </div>
+        <div class="source-card">
+          <h3>思想来源</h3>
+          <p>System One 接口与 Jev 的研究方向启发了本项目的目标形态。VisionJev 是独立研究，不是 TypeSafe 或 Jev 的官方产品。</p>
+          <a class="text-link" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Introducing System One Models and Jev</a>
+        </div>
+        <div class="source-card">
+          <h3>驾驶评测</h3>
+          <p>DriveJev 的规划评测使用 NAVSIM。</p>
+          <a class="text-link" href="https://github.com/autonomousvision/navsim">autonomousvision/navsim</a>
+        </div>
+      </div>
+
+      <p class="section-foot">
+        <a class="text-link" href="CITATION.cff">CITATION.cff</a>
+        <span class="dot-sep" aria-hidden="true">·</span>
+        <a class="text-link" href="references.bib">references.bib</a>
+        <span class="dot-sep" aria-hidden="true">·</span>
+        <a class="text-link" href="docs/VERIFICATION.md">完整核验记录</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-name">VisionJev</span>
+      <p>面向快速结构化视觉决策的小型多模态模型。</p>
+    </div>
+    <nav class="footer-links" aria-label="页脚导航">
+      <a href="https://github.com/derekshiii/VisionJev">GitHub 仓库</a>
+      <a href="README_CN.md">中文说明</a>
+      <a href="README.md">English README</a>
+      <a href="docs/MULTIMODAL_PLAN_CN.md">多模态研究计划</a>
+      <a href="docs/VERIFICATION.md">核验记录</a>
+      <a href="CITATION.cff">引用信息</a>
+    </nav>
+  </div>
+  <div class="wrap footer-note">
+    <p>本页内容与仓库文档同源。仓库当前以文档、图表与结果摘要为主，模型代码正在整理发布；源码许可尚未确定。</p>
+  </div>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>
